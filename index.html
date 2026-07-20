@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0e">
+  <title>Weazel Finance — Comptabilité</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <form id="accountLoginForm" class="login-card account-login-card">
+      <div class="lock-logo">W</div>
+      <p class="eyebrow">WEAZEL NEWS</p>
+      <h2>Finance Center</h2>
+      <p>Connectez-vous avec votre compte pour accéder aux données financières.</p>
+      <label>Identifiant<input id="loginUsername" name="username" autocomplete="username" required></label>
+      <label>Mot de passe<div class="password-field"><input id="loginPassword" name="password" type="password" autocomplete="current-password" required><button type="button" id="toggleLoginPassword">◉</button></div></label>
+      <button type="submit" class="primary-btn full">Se connecter</button>
+      <p id="loginError" class="admin-error" aria-live="polite"></p>
+    </form>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">W</div>
+        <div><strong>WEAZEL NEWS</strong><span>Finance Center</span></div>
+      </div>
+      <nav aria-label="Navigation principale">
+        <button class="nav-link active" data-page="dashboard"><span>◫</span> Tableau de bord</button>
+        <button class="nav-link" data-page="operations"><span>⇄</span> Opérations</button>
+        <button class="nav-link" data-page="factures"><span>▤</span> Factures</button>
+        <button class="nav-link" data-page="employes"><span>♟</span> Employés</button>
+        <button class="nav-link admin-link" data-page="admin"><span>⚙</span> Administration</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="storage-state"><i></i><span>Sauvegarde locale active</span></div>
+        <small>Weazel Finance v2.0</small>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+        <div><p class="eyebrow">WEAZEL NEWS · SERVICE FINANCIER</p><h1 id="pageTitle">Tableau de bord</h1></div>
+        <div class="top-actions">
+          <button class="icon-btn" id="quickExport" title="Exporter les données">⇩</button>
+          <button class="user-chip user-menu-btn" id="accountLogout" title="Se déconnecter"><div class="avatar" id="userAvatar">WN</div><div><strong id="currentUserName">Utilisateur</strong><span id="currentUserRole">Déconnexion</span></div></button>
+        </div>
+      </header>
+
+      <section class="page active" id="dashboard">
+        <div class="hero-panel">
+          <div><p class="eyebrow">VUE D'ENSEMBLE</p><h2>La santé financière du Weazel News, en un coup d'œil.</h2><p>Suivi centralisé des entrées, sorties, factures et charges salariales.</p></div>
+          <div class="hero-actions"><button class="primary-btn jump-admin">+ Nouvelle opération</button><span class="period-pill" id="currentPeriod"></span></div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card featured"><span>Solde actuel</span><strong id="statSolde">0 $</strong><small id="balanceTrend">Situation nette</small></article>
+          <article class="stat-card"><span>Revenus du mois</span><strong id="statRevenus">0 $</strong><small id="revenueCount">0 opération</small></article>
+          <article class="stat-card"><span>Dépenses du mois</span><strong id="statDepenses">0 $</strong><small id="expenseCount">0 opération</small></article>
+          <article class="stat-card"><span>À encaisser</span><strong id="statFactures">0 $</strong><small id="invoiceCount">0 facture ouverte</small></article>
+          <article class="stat-card"><span>Masse salariale</span><strong id="statPayroll">0 $</strong><small id="employeeCount">0 employé actif</small></article>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel chart-panel">
+            <div class="panel-heading split"><div><p class="eyebrow">ÉVOLUTION</p><h3>Revenus et dépenses</h3></div><select id="chartPeriod"><option value="6">6 mois</option><option value="12">12 mois</option></select></div>
+            <div class="chart-wrap"><canvas id="financeChart" height="240"></canvas></div>
+            <div class="chart-legend"><span><i class="legend-income"></i>Revenus</span><span><i class="legend-expense"></i>Dépenses</span></div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">BUDGET MENSUEL</p><h3>Objectif de dépenses</h3></div></div>
+            <div class="budget-ring" id="budgetRing"><div><strong id="budgetPercent">0%</strong><span>utilisé</span></div></div>
+            <div class="budget-details"><span>Dépensé <strong id="budgetSpent">0 $</strong></span><span>Budget <strong id="budgetTotal">0 $</strong></span></div>
+          </section>
+        </div>
+
+        <div class="dashboard-grid lower">
+          <section class="panel"><div class="panel-heading split"><div><p class="eyebrow">ACTIVITÉ</p><h3>Dernières opérations</h3></div><button class="text-btn" data-go="operations">Tout voir →</button></div><div id="recentOperations" class="list"></div></section>
+          <section class="panel"><div class="panel-heading"><div><p class="eyebrow">ÉCHÉANCES</p><h3>Factures à surveiller</h3></div></div><div id="dueInvoices" class="list"></div></section>
+        </div>
+      </section>
+
+      <section class="page" id="operations">
+        <div class="page-tools">
+          <div class="search-box">⌕<input id="operationSearch" placeholder="Rechercher une opération..."></div>
+          <select id="operationFilter"><option value="all">Tous les types</option><option value="revenu">Revenus</option><option value="depense">Dépenses</option></select>
+          <select id="operationMonth"><option value="all">Tous les mois</option></select>
+          <button class="primary-btn jump-admin">+ Ajouter</button>
+        </div>
+        <div class="panel table-panel"><div class="panel-heading"><div><p class="eyebrow">JOURNAL COMPTABLE</p><h3>Toutes les opérations</h3></div><strong id="operationsTotal"></strong></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Libellé</th><th>Catégorie</th><th>Mode</th><th>Montant</th></tr></thead><tbody id="operationsTable"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="factures">
+        <div class="page-tools"><div class="search-box">⌕<input id="invoiceSearch" placeholder="Rechercher une facture..."></div><select id="invoiceFilter"><option value="all">Tous les statuts</option><option>Impayée</option><option>En attente</option><option>Payée</option></select><button class="primary-btn jump-admin">+ Ajouter</button></div>
+        <div class="invoice-summary" id="invoiceSummary"></div>
+        <div id="invoiceCards" class="cards-grid"></div>
+      </section>
+
+      <section class="page" id="employes">
+        <div class="page-tools"><div class="search-box">⌕<input id="employeeSearch" placeholder="Rechercher un employé..."></div><select id="employeeFilter"><option value="all">Tous les statuts</option><option>Actif</option><option>En congé</option><option>Suspendu</option></select><button class="primary-btn jump-admin">+ Ajouter</button></div>
+        <div id="employeeCards" class="employee-grid"></div>
+      </section>
+
+      <section class="page" id="admin">
+        <div id="adminContent">
+          <div class="admin-header"><div><p class="eyebrow">ZONE DE GESTION</p><h2>Centre d'administration</h2><p>Configurez l'intégralité du suivi comptable.</p></div><div class="admin-toolbar"><button id="adminLogout" class="secondary-btn">Déconnexion</button><button id="exportData" class="secondary-btn">Exporter</button><label class="secondary-btn file-btn">Importer<input id="importData" type="file" accept="application/json"></label></div></div>
+
+          <div class="admin-tabs">
+            <button class="admin-tab active" data-admin-tab="add">Ajouter</button><button class="admin-tab" data-admin-tab="manage">Gérer les données</button><button class="admin-tab" data-admin-tab="accounts">Comptes</button><button class="admin-tab" data-admin-tab="settings">Paramètres</button>
+          </div>
+
+          <div class="admin-view active" id="admin-add">
+            <div class="admin-grid">
+              <form id="operationForm" class="panel form-panel"><div class="panel-heading"><h3>Nouvelle opération</h3></div><div class="form-grid"><label>Type<select name="type"><option value="revenu">Revenu</option><option value="depense">Dépense</option></select></label><label>Date<input name="date" type="date" required></label><label class="wide">Libellé<input name="label" placeholder="Ex. Contrat publicitaire" required></label><label>Catégorie<input name="category" placeholder="Publicité, matériel..." required></label><label>Mode de paiement<select name="payment"><option>Banque</option><option>Espèces</option><option>Chèque</option><option>Virement</option></select></label><label>Montant ($)<input name="amount" type="number" min="0.01" step="0.01" required></label><label class="wide">Note<textarea name="note" placeholder="Informations complémentaires..."></textarea></label></div><button class="primary-btn full">Enregistrer l'opération</button></form>
+              <form id="invoiceForm" class="panel form-panel"><div class="panel-heading"><h3>Nouvelle facture</h3></div><div class="form-grid"><label class="wide">Client / Fournisseur<input name="party" required></label><label class="wide">Objet<input name="title" required></label><label>Montant ($)<input name="amount" type="number" min="0.01" step="0.01" required></label><label>Échéance<input name="dueDate" type="date" required></label><label>Statut<select name="status"><option>Impayée</option><option>En attente</option><option>Payée</option></select></label><label>Référence<input name="reference" placeholder="WN-2026-001"></label></div><button class="primary-btn full">Créer la facture</button></form>
+              <form id="employeeForm" class="panel form-panel"><div class="panel-heading"><h3>Nouvel employé</h3></div><div class="form-grid"><label class="wide">Nom complet<input name="name" required></label><label>Poste<input name="role" required></label><label>Service<select name="department"><option>Direction</option><option>Rédaction</option><option>Terrain</option><option>Technique</option><option>Commercial</option></select></label><label>Salaire ($)<input name="salary" type="number" min="0" step="0.01" required></label><label>Statut<select name="status"><option>Actif</option><option>En congé</option><option>Suspendu</option></select></label><label>Date d'arrivée<input name="startDate" type="date" required></label></div><button class="primary-btn full">Ajouter l'employé</button></form>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-manage"><div class="manage-grid"><section class="panel"><div class="panel-heading"><h3>Opérations</h3></div><div id="adminOperations" class="list compact"></div></section><section class="panel"><div class="panel-heading"><h3>Factures</h3></div><div id="adminInvoices" class="list compact"></div></section><section class="panel"><div class="panel-heading"><h3>Employés</h3></div><div id="adminEmployees" class="list compact"></div></section></div></div>
+
+          <div class="admin-view" id="admin-accounts">
+            <div class="settings-grid">
+              <form id="accountForm" class="panel form-panel">
+                <div class="panel-heading"><h3>Créer un compte</h3></div>
+                <label>Nom affiché<input name="displayName" required placeholder="Ex. James Whitmore"></label>
+                <label>Identifiant<input name="username" required minlength="3" placeholder="Ex. j.whitmore"></label>
+                <label>Mot de passe<input name="password" type="password" required minlength="6"></label>
+                <label>Rôle<select name="role"><option value="admin">Administrateur</option><option value="comptable">Comptable</option><option value="lecture">Lecture seule</option></select></label>
+                <button class="primary-btn">Créer le compte</button>
+              </form>
+              <section class="panel">
+                <div class="panel-heading"><div><p class="eyebrow">UTILISATEURS</p><h3>Comptes autorisés</h3></div></div>
+                <div id="accountsList" class="list compact"></div>
+              </section>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-settings"><div class="settings-grid"><form id="settingsForm" class="panel form-panel"><div class="panel-heading"><h3>Réglages financiers</h3></div><label>Nom de l'organisation<input name="organization"></label><label>Budget mensuel ($)<input name="monthlyBudget" type="number" min="0"></label><label>Devise<select name="currency"><option value="$">Dollar ($)</option><option value="€">Euro (€)</option></select></label><button class="primary-btn">Enregistrer</button></form><form id="passwordForm" class="panel form-panel"><div class="panel-heading"><h3>Mon mot de passe</h3></div><label>Mot de passe actuel<input name="current" type="password" required></label><label>Nouveau mot de passe<input name="next" type="password" minlength="6" required></label><label>Confirmation<input name="confirm" type="password" minlength="6" required></label><button class="primary-btn">Modifier mon mot de passe</button><small class="warning-note">Les comptes sont stockés localement dans ce navigateur. Pour un hébergement public, un serveur avec base de données est nécessaire.</small></form><section class="panel danger-zone"><div class="panel-heading"><h3>Zone sensible</h3></div><p>Créez une sauvegarde avant toute réinitialisation.</p><button id="resetData" class="danger-btn">Réinitialiser toutes les données</button></section></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <div id="confirmModal" class="modal hidden"><div class="modal-card"><h3 id="confirmTitle">Confirmation</h3><p id="confirmText"></p><div><button id="confirmCancel" class="secondary-btn">Annuler</button><button id="confirmOk" class="danger-btn">Confirmer</button></div></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
