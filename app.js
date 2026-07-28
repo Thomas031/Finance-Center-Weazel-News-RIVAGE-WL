@@ -2,6 +2,7 @@ import { auth, db } from "./firebase-config.js";
 import {signInWithEmailAndPassword,signOut,onAuthStateChanged,createUserWithEmailAndPassword,updatePassword,EmailAuthProvider,reauthenticateWithCredential,getAuth} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import {collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,serverTimestamp,writeBatch} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import {initializeApp,getApp,deleteApp} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {collection,doc,getDoc,addDoc,setDoc,updateDoc,deleteDoc,onSnapshot,query,where} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const $=id=>document.getElementById(id);
 const defaultData={settings:{organization:'Weazel News',monthlyBudget:18000,currency:'$'},accounts:[],operations:[],invoices:[],employees:[],payslips:[]};
